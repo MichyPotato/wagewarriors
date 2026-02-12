@@ -5,8 +5,18 @@
     <div class="conatiner">
         <div class="row mt-3">
             <div class="col mx-auto mb-3">
-                <h2>Account Page</h2>
-                <hr>
+                <div class="container text-center">
+                    <h2>Choose a sign in option</h2>
+                    <hr>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'account.recruiter_signup' %}" class="w-100 me-2">
+                        <button class="btn btn-outline-primary btn-lg w-100 me-2">Recruiter</button>
+                    </a>
+                    <a href="{% url 'account.seeker_signup' %}" class="w-100 ms-2">
+                        <button class="btn btn-outline-danger btn-lg w-100 ms-2">Job Seeker</button>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

@@ -6,13 +6,14 @@ class jobSeeker(models.Model):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
+    currentLocation = models.CharField(max_length=100, blank=True)
     headline = models.CharField(max_length=255, blank=True)
     skills = models.TextField(blank=True)
     education = models.TextField(blank=True)
     work_experience = models.TextField(blank=True)
     additional_links = models.TextField(blank=True)
     isPrivate = models.BooleanField(default=False)
-    currentLocation = models.CharField(max_length=100, blank=True)
+
     def __str__(self):
         return self.name
 
@@ -24,6 +25,7 @@ class recruiter(models.Model):
     password = models.CharField(max_length=100)
     company_name = models.CharField(max_length=255, blank=True)
     isAdmin = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name
     
@@ -39,3 +41,6 @@ class jobsAppliedTo(models.Model):
         ('Closed', 'Closed'),
         ('Rejected', 'Rejected')
     ], default='Applied')
+    
+    def __str__(self):
+        return self.jobSeekerIDFK.name + " - " + self.jobIDFK.title
