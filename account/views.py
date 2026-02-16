@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .forms import SeekerSignupForm, RecruiterSignupForm
 from .models import jobSeeker, recruiter, User
+from .forms import UserEditForm, JobSeekerProfileForm, RecruiterProfileForm
 from django.contrib.auth import logout
 
 # Create your views here.
@@ -33,7 +34,6 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     
-
     return render(request, 'account/login.html', {'form': form})
 
 
@@ -44,6 +44,61 @@ def profile(request, username):
     template_data['title'] = 'Profile'
     user = get_object_or_404(User, username=username)
     return render(request, 'account/profile.html', {'template_data': template_data, 'user': user})
+
+# Edits user's profile
+@login_required
+def edit_profile(request, username):
+    if request.user.username != username:
+        return redirect('account.profile', username=username)
+
+    user_obj = request.user
+
+    # Ensure profile instances exist
+    if user_obj.is_job_seeker:
+        try:
+            profile_instance = user_obj.job_seeker_profile
+        except jobSeeker.DoesNotExist:
+            profile_instance = jobSeeker.objects.create(user=user_obj)
+    elif user_obj.is_recruiter:
+        try:
+            profile_instance = user_obj.recruiter_profile
+        except recruiter.DoesNotExist:
+            profile_instance = recruiter.objects.create(user=user_obj)
+    else:
+        profile_instance = None
+
+    if request.method == 'POST':
+        user_form = UserEditForm(request.POST, instance=user_obj)
+
+        if user_obj.is_job_seeker:
+            profile_form = JobSeekerProfileForm(request.POST, instance=profile_instance)
+        elif user_obj.is_recruiter:
+            profile_form = RecruiterProfileForm(request.POST, instance=profile_instance)
+        else:
+            profile_form = None
+
+        forms_valid = user_form.is_valid() and (profile_form.is_valid() if profile_form else True)
+
+        if forms_valid:
+            user_form.save()
+            if profile_form:
+                profile_form.save()
+            return redirect('account.profile', username=user_obj.username)
+    else:
+        user_form = UserEditForm(instance=user_obj)
+        if user_obj.is_job_seeker:
+            profile_form = JobSeekerProfileForm(instance=profile_instance)
+        elif user_obj.is_recruiter:
+            profile_form = RecruiterProfileForm(instance=profile_instance)
+        else:
+            profile_form = None
+
+    return render(request, 'account/profile_edit.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'user_obj': user_obj,
+        'template_data': {'title': 'Edit Profile'},
+    })
 
 #logout view
 @login_required

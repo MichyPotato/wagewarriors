@@ -5,21 +5,16 @@
         <div class="col-lg-8">
             
             <div class="card shadow-sm mb-4 border-0">
-                {% comment %} Only show the edit button if a user is on their account{% endcomment %}
-                {% if user.is_job_seeker%}
+                {% comment %} Only show the edit button if the logged-in user is viewing their own account {% endcomment %}
+                {% if request.user.username == user.username %}
                 <div class="card-header bg-white border-0 d-flex justify-content-end pt-3 pb-0">
-                    {% comment %} Make url point to a edit_profile page {% endcomment %}
-                    <a class='btn btn-warning' href='#'>Edit</a> 
-                {% endif %}
-
-                {% comment %} Only show the edit button if a user is on their account{% endcomment %}
-                {% if user.is_recruiter %}
-                <div class="card-header bg-white border-0 d-flex justify-content-end pt-3 pb-0">
-                    {% comment %} Make url point to a edit_profile page {% endcomment %}
-                    <a class='btn btn-warning' href='#'>Edit profile</a> 
-                {% endif %}
-                
+                    {% if user.is_job_seeker %}
+                        <a class='btn btn-warning' href="{% url 'account.edit_profile' username=user.username %}">Edit</a>
+                    {% elif user.is_recruiter %}
+                        <a class='btn btn-warning' href="{% url 'account.edit_profile' username=user.username %}">Edit profile</a>
+                    {% endif %}
                 </div>
+                {% endif %}
                 <div class="card-body text-center pt-5 pb-4">
                     <div class="mb-3">
                         <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem;">

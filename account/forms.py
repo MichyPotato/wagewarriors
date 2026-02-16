@@ -30,3 +30,50 @@ class RecruiterSignupForm(forms.ModelForm):
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control'})
             self.fields[field].help_text = None
+
+
+# Edit forms for profile updates
+from .models import jobSeeker, recruiter
+
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+
+
+class JobSeekerProfileForm(forms.ModelForm):
+    class Meta:
+        model = jobSeeker
+        fields = ['currentLocation', 'headline', 'skills', 'education', 'work_experience', 'additional_links', 'isPrivate']
+        widgets = {
+            'isPrivate': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            # Leave checkbox styling to its specific widget
+            if field == 'isPrivate':
+                continue
+            widget = self.fields[field].widget
+            try:
+                widget.attrs.update({'class': 'form-control'})
+            except Exception:
+                pass
+
+
+class RecruiterProfileForm(forms.ModelForm):
+    class Meta:
+        model = recruiter
+        fields = ['company_name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({'class': 'form-control'})

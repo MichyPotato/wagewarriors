@@ -100,7 +100,7 @@
                                             </ul>
 
                                             {% if user.is_authenticated and user.is_job_seeker %}
-                                            <a class="btn btn-primary" href="{% url 'jobs.apply' j.id %}" role="button">Apply</a>
+                                            <a class="btn btn-primary mt-3" href="{% url 'jobs.apply' j.id %}" role="button">Apply</a>
                                             {% endif %}
                                         </div>
                                         <div class="col-4 text-left">
