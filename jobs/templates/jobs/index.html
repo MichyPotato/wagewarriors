@@ -18,7 +18,40 @@
                     {% endif %}
                 </div>
                 <hr>
-            
+                {% if not user.is_recruiter %}
+                <div class="card p-3 mb-4 bg-light">
+                    <form method="GET" action="{% url 'jobs.index' %}" class="row g-3">
+                        <div class="col-md-3">
+                            <input type="text" name="title" class="form-control" placeholder="Job Title" value="{{ request.GET.title }}">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" name="location" class="form-control" placeholder="Location" value="{{ request.GET.location }}">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" name="skill" class="form-control" placeholder="Skill (e.g. Python)" value="{{ request.GET.skill }}">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <input type="number" name="min_salary" class="form-control" placeholder="Min $" value="{{ request.GET.min_salary }}">
+                                <input type="number" name="max_salary" class="form-control" placeholder="Max $" value="{{ request.GET.max_salary }}">
+                            </div>
+                        </div>
+                        <div class="col-md-12 d-flex align-items-center">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="isRemote" id="remote" {% if request.GET.isRemote %}checked{% endif %}>
+                                <label class="form-check-label" for="remote">Remote</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="hasVisaSponsorship" id="visa" {% if request.GET.hasVisaSponsorship %}checked{% endif %}>
+                                <label class="form-check-label" for="visa">Visa Sponsorship</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary ms-auto">Search Jobs</button>
+                            <a href="{% url 'jobs.index' %}" class="btn btn-link">Reset</a>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+
                 {% for j in template_data.jobs %}
                     {% if user.is_recruiter %}
                         {% if j.company == user.recruiter_profile.company_name %}
@@ -97,7 +130,7 @@
                     {% if user.is_authenticated and user.is_recruiter %}
                         You haven't posted any jobs yet.
                     {% else %}
-                        Nob jobs available. Try again later or change your filters!
+                        No jobs available. Try again later or change your filters!
                     {% endif %}
                     </p>
                 </div>
