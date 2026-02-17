@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.db.models import Q
 from .models import job
 from decimal import Decimal, InvalidOperation
 
@@ -8,7 +9,32 @@ from decimal import Decimal, InvalidOperation
 def index(request):
     template_data = {}
     template_data['title'] = 'Jobs'
-    template_data['jobs'] = job.objects.all()
+    jobList = job.objects.all()
+
+    title = request.GET.get('title')
+    location = request.GET.get('location')
+    skill = request.GET.get('skill')
+    min = request.GET.get('min_salary')
+    max = request.GET.get('max_salary')
+    remote = request.GET.get('isRemote')
+    visa = request.GET.get('hasVisaSponsorship')
+
+    if title:
+        jobList = jobList.filter(title__icontains=title)
+    if location:
+        jobList = jobList.filter(location__icontains=location)
+    if skill:
+        jobList = jobList.filter(skills__icontains=skill)
+    if min:
+        jobList = jobList.filter(salaryLower__gte=min)
+    if max:
+        jobList = jobList.filter(salaryUpper__lte=max)
+    if remote == 'on':
+        jobList = jobList.filter(isRemote=True)
+    if visa == 'on':
+        jobList = jobList.filter(hasVisaSponsorship=True)
+    
+    template_data['jobs'] = jobList
     return render(request, 'jobs/index.html', {'template_data': template_data})
 
 def apply(request, id):
