@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'account',
     'jobs',
     'chat',
-    'applicants'
+    'applicants',
     'import_export',
 ]
 
