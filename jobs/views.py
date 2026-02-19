@@ -2,7 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.db.models import Q
+from account.models import jobsAppliedTo
 from .models import job
+
 from decimal import Decimal, InvalidOperation
 
 # Create your views here.
@@ -40,11 +42,19 @@ def index(request):
 def apply(request, id):
     job_instance = get_object_or_404(job, id=id)
 
-    context = {
-        'job': job_instance,
-    }
+    if request.method == "POST":
+        user_note = request.POST.get('cover_letter')
 
-    return render(request, 'jobs/applied.html', context)
+        jobsAppliedTo.objects.create(
+            jobIDFK=job_instance,
+            jobSeekerIDFK=request.user.job_seeker_profile,
+            note=user_note,
+            status='Applied'
+        )
+
+        return redirect('jobs.index')
+
+    return render(request, 'jobs/applied.html', {'job': job_instance})
 
 
 def create_or_edit(request, id=None):
