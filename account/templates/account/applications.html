@@ -13,32 +13,71 @@
                             <div class="card-body">
                                 <p class="card-title fw-bold text-primary">{{ application.jobIDFK.title }}</strong> at {{ application.jobIDFK.company }}</p>
                                 <small class="text-muted fst-italic">Status: {{ application.status|default:"Pending" }}</small>
+
+                                
+                                <!-- Progress Arrow Bar -->
+                                <!-- Progress Arrow Bar -->
+                                {% if application.status == "Rejected" %}
+                                <div style="border-radius:5px; border:1px solid #e00; background-color:#ff4d4d; color:#fff; height:35px; display:inline-flex; align-items:center; justify-content:center; padding:0 20px; font-family:Arial;">
+                                    Rejected
+                                </div>
+                                {% else %}
+                                <div style="border-radius:5px; border:1px solid #ccc; background-color:#fff; height:35px; display:inline-flex; align-items:center; overflow:hidden;">
+
+                                    {% if application.status == "Applied" or application.status == "Review" or application.status == "Interview" or application.status == "Offer" or application.status == "Closed"%}
+                                    <div style="background-color:#73bf69; color:#fff; display:inline-flex; align-items:center; height:35px; padding:0 20px 0 15px; font-family:Arial; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);">
+                                        Applied
+                                    </div>
+                                    {% else %}
+                                    <div style="background-color:#fff; color:#333; display:inline-flex; align-items:center; height:35px; padding:0 20px 0 15px; font-family:Arial; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);">
+                                        Applied
+                                    </div>
+                                    {% endif %}
+
+                                    {% if application.status == "Review" or application.status == "Interview" or application.status == "Offer" or application.status == "Closed"%}
+                                    <div style="background-color:#73bf69; color:#fff; display:inline-flex; align-items:center; height:35px; padding:0 20px 0 20px; font-family:Arial; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%, 10px 50%); margin-left:-8px;">
+                                        Review
+                                    </div>
+                                    {% else %}
+                                    <div style="background-color:#e0e0e0; color:#333; display:inline-flex; align-items:center; height:35px; padding:0 20px 0 20px; font-family:Arial; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%, 10px 50%); margin-left:-8px;">
+                                        Review
+                                    </div>
+                                    {% endif %}
+
+                                    {% if application.status == "Interview" or application.status == "Offer" or application.status == "Closed"%}
+                                    <div style="background-color:#73bf69; color:#fff; display:inline-flex; align-items:center; height:35px; padding:0 20px 0 20px; font-family:Arial; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%, 10px 50%); margin-left:-8px;">
+                                        Interview
+                                    </div>
+                                    {% else %}
+                                    <div style="background-color:#e0e0e0; color:#333; display:inline-flex; align-items:center; height:35px; padding:0 20px 0 20px; font-family:Arial; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%, 10px 50%); margin-left:-8px;">
+                                        Interview
+                                    </div>
+                                    {% endif %}
+
+                                    {% if application.status == "Offer" or application.status == "Closed"%}
+                                    <div style="background-color:#73bf69; color:#fff; display:inline-flex; align-items:center; height:35px; padding:0 20px 0 20px; font-family:Arial; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%, 10px 50%); margin-left:-8px;">
+                                        Offer
+                                    </div>
+                                    {% else %}
+                                    <div style="background-color:#e0e0e0; color:#333; display:inline-flex; align-items:center; height:35px; padding:0 20px 0 20px; font-family:Arial; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%, 10px 50%); margin-left:-8px;">
+                                        Offer
+                                    </div>
+                                    {% endif %}
+
+                                    {% if application.status == "Closed"%}
+                                    <div style="background-color:#73bf69; color:#fff; display:inline-flex; align-items:center; height:35px; padding:0 15px 0 20px; font-family:Arial; clip-path:polygon(0 0, 100% 0, 100% 100%, 0 100%, 10px 50%); margin-left:-8px;">
+                                        Closed
+                                    </div>
+                                    {% else %}
+                                    <div style="background-color:#e0e0e0; color:#333; display:inline-flex; align-items:center; height:35px; padding:0 15px 0 20px; font-family:Arial; clip-path:polygon(0 0, 100% 0, 100% 100%, 0 100%, 10px 50%); margin-left:-8px;">
+                                        Closed
+                                    </div>
+                                    {% endif %}
+
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
-
-                         <!-- Progress Arrow Bar -->
-                        <!-- <div style="border-radius:5px; border:1px solid #ccc; background-color:#fff; height:35px; padding-left:10px;">
-                            <div style="float:left; display:inline-block; line-height:35px; padding-left:5px; font-family:Arial;">
-                                Applied
-                            </div>
-                            <div style="float:left; position:relative; transform:rotate(-45deg) skew(-15deg, -15deg); display:inline-block; box-shadow:1px 1px 3px 0px rgba(0,0,0,0.15); border-bottom:1px solid #ccc; border-right:1px solid #ccc; width:19px; height:19px; top:8px; left:-8px;"></div>
-                            <div style="float:left; display:inline-block; line-height:35px; padding-left:5px; font-family:Arial;">
-                                Review
-                            </div>
-                            <div style="float:left; position:relative; transform:rotate(-45deg) skew(-15deg, -15deg); display:inline-block; box-shadow:1px 1px 3px 0px rgba(0,0,0,0.15); border-bottom:1px solid #ccc; border-right:1px solid #ccc; width:19px; height:19px; top:8px; left:-8px;"></div>
-                            <div style="float:left; display:inline-block; line-height:35px; padding-left:5px; font-family:Arial;">
-                                Interview
-                            </div>
-                            <div style="float:left; position:relative; transform:rotate(-45deg) skew(-15deg, -15deg); display:inline-block; box-shadow:1px 1px 3px 0px rgba(0,0,0,0.15); border-bottom:1px solid #ccc; border-right:1px solid #ccc; width:19px; height:19px; top:8px; left:-8px;"></div>
-                            <div style="float:left; display:inline-block; line-height:35px; padding-left:5px; font-family:Arial;">
-                                Offer
-                            </div>
-                            <div style="float:left; position:relative; transform:rotate(-45deg) skew(-15deg, -15deg); display:inline-block; box-shadow:1px 1px 3px 0px rgba(0,0,0,0.15); border-bottom:1px solid #ccc; border-right:1px solid #ccc; width:19px; height:19px; top:8px; left:-8px;"></div>
-                            <div style="float:left; display:inline-block; line-height:35px; padding-left:5px; font-family:Arial;">
-                                Closed
-                            </div>
-                        </div> -->
-
                     </div>
                     {% endfor %}
                 </div>  
