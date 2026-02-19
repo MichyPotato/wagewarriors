@@ -1,13 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-5">
-    <div class="card text-center shadow-sm">
-        <div class="card-body">
-            <h2 class="text-success">Application Submitted!</h2>
-            <hr>
-            <p class="lead">{{ message }}</p>
-            <p>The recruitment team at <strong>{{ job.company }}</strong> will review your profile shortly.</p>
-            <a href="{% url 'jobs.index' %}" class="btn btn-secondary">Back to Job Listings</a>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2>Apply for {{ job.title }}</h2>
+                    <p class="text-muted">Company: {{ job.company }}</p>
+                    <hr>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="cover_letter" class="form-label">Introduce yourself to the recruiter:</label>
+                            <textarea name="cover_letter" id="cover_letter" class="form-control" rows="5" placeholder="Write your message here..." required></textarea>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'jobs.index' %}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Submit Application</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
