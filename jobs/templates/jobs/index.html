@@ -110,7 +110,7 @@
                                                 {% endfor %}
                                             </ul>
 
-                                            {% if user.is_authenticated and user.is_job_seeker %}
+                                            {% if user.is_authenticated and user.is_job_seeker and user.job_seeker_profile.currentLocation and user.job_seeker_profile.education and user.job_seeker_profile.headline and user.job_seeker_profile.skills and  user.job_seeker_profile.work_experience%}
                                             <a class="btn btn-primary mt-3" href="{% url 'jobs.apply' j.id %}" role="button">Apply</a>
                                             {% endif %}
                                         </div>
