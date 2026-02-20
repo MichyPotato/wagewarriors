@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <div class="container-fluid py-4">
+        <header class="d-flex justify-content-betweeen alight-itens-center mb-3 flex-wrap gap-2">
+            <div>
+                <a href="{% url 'account.kanban' %}" class="btn btn-outline-secondary btn-sm mb-2">&larr; All Jobs</a>
+                <h2 class="mb-0">{{ template_data.job.title }}</h2>
+                <p class="text-muted small mb-0"> {{ template_data.job.company }}</p>
+            </div>
+        </header>
+        <div class="pipeline-board d-flex gap-3 overflow-auto pb-4" style="min-height: 70vh;" data-update-status-url="{% url 'account.kanban_updat' %}">
+            {% for status in template_data.status %}
+                <div class="pipeline-column flex-shrink-0 rounded-3 boarder bg-light p-3" data-status="{{ status }}" style="min-width: 280px; max-width: 320px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0 text-uppercase fw-bold">{{ status }}</h6>
+                        <span class="badge bg-secondary applicant-count" id="count-{{ status }}">0</span>
+                    </div>
+                    <div class="pipeline-cards droppable" data-status="{{ status }}">
+                        {% for app in template_data.application %}
+                            {% if app.status == status %}
+                                <div class="card pipeline-card mb-2 shadow-sm applicant-card" draggable="true" data-applicant-id="{{ app.id }}" data-status="{{ status }}">
+                                    <div class="card-body py-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <strong class="d-block">
+                                                    {{ app.jobSeekerIDFK.user.get_full_name|default:app.jobSeekerIDFK.user.username }}
+                                                </strong>
+                                                <small class="text-muted">@{{ app.jobSeekerIDFK.user.username }}</small>
+                                            </div>
+                                        </div>
+                                        {% if app.jobSeekerIDFK.headline %}
+                                            <p class="small text-dark mt-2 mb-0">
+                                                {{ app.jobSeekerIDFK.headline|truncatewords:12 }}
+                                            </p>
+                                        {% endif %}
+                                        {% if app.note %}
+                                            <p class="cmall text-muted mt-1 mb-0">
+                                                <em>{{ app.note|truncatewords:8 }}</em>
+                                            </p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                    {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{% static 'css/pipeline.css' %}">
+    <script scr="{% static 'js/pipeline.js' %}"></script>
+{% endblock content %}
