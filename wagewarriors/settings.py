@@ -135,3 +135,4 @@ AUTH_USER_MODEL = 'account.User'
 STATICFILES_DIRS = [
     BASE_DIR / 'wagewarriors/static/',
 ]
+
