@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'chat',
     'applicants',
     'import_export',
+    'map',
 ]
 
 MIDDLEWARE = [

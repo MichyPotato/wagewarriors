@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
 
@@ -26,6 +29,7 @@
           <div class="navbar-nav nav-underline ms-auto navbar-ml">
             {% comment %} Job seeker links {% endcomment %}
             {% if user.is_authenticated and user.is_job_seeker %}
+            <a class="nav-link" href="{% url 'map.index' %}">Map</a>
             <a class="nav-link" href="{% url 'jobs.index' %}">Job Search</a>
             <a class="nav-link" href="{% url 'account.applications' user.username %}">Applications</a>
             <div class="vr bg-white mx-2 d-none d-lg-block"></div>
@@ -35,6 +39,7 @@
 
             {% comment %} Recruiter links {% endcomment %}
             {% elif user.is_authenticated and user.is_recruiter %}
+            <a class="nav-link" href="{% url 'map.index' %}">Map</a>
             <a class="nav-link" href="{% url 'jobs.index' %}">Your Jobs</a>
             <a class="nav-link" href="{% url 'applicants.index' %}">Applicants</a>
             <div class="vr bg-white mx-2 d-none d-lg-block"></div>
@@ -44,6 +49,7 @@
             {% elif user.is_authenticated %}
 
             {% comment %} Admin can logout, and look at jobs {% endcomment %}
+            <a class="nav-link" href="{% url 'map.index' %}">Map</a>
             <a class="nav-link" href="{% url 'jobs.index' %}">Job Search</a>
             <div class="vr bg-white mx-2 d-none d-lg-block"></div>
             <a class="nav-link" href="{% url 'account.logout' %}">Logout</a>
@@ -51,6 +57,7 @@
             {% else %}
 
             {% comment %} Not logged in user {% endcomment %}
+            <a class="nav-link" href="{% url 'map.index' %}">Map</a>
             <a class="nav-link" href="{% url 'jobs.index' %}">Job Search</a>
             <div class="vr bg-white mx-2 d-none d-lg-block"></div>
             <a class="nav-link" href="{% url 'account.login' %}">Login</a>
