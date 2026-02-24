@@ -183,6 +183,7 @@ def kanban(request, job_id=None):
     template_data['jobs'] = recruiter_job
 
     return render(request, 'account/kanban_job.html' {'template_data': template_data})
+
 @login_required
 @require_POST
 def kanban_update(request):
