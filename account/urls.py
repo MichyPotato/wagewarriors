@@ -12,4 +12,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='account.logout'),
     path('kanban/', views.kanban, name='account.kanban'),
     path('kanban/<int:job_id>/', views.kanban, name='account.kanban_job'),
+    path('kanban/update', views.kanban_update, name='account.kanban_update'),
 ]
