@@ -10,4 +10,6 @@ urlpatterns = [
     path('applications/<str:username>/', views.applications, name='account.applications'),
     path('login/', views.login_view, name='account.login'),
     path('logout/', views.logout_view, name='account.logout'),
+    path('kanban/', views.kanban, name='account.kanban'),
+    path('kanban/<int:job_id>/', views.kanban, name='account.kanban_job'),
 ]
