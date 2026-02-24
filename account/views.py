@@ -183,3 +183,25 @@ def kanban(request, job_id=None):
     template_data['jobs'] = recruiter_job
 
     return render(request, 'account/kanban_job.html' {'template_data': template_data})
+@login_required
+@require_POST
+def kanban_update(request):
+    if not getattr(request.user, 'is_recruiter', False):
+        raise PermissionDenied
+    application_id = request.POST.get('application_id')
+    status_update = request.POST.get('status')
+    
+    if not application_id or not status_update:
+        return HttpResponseBadRequest()
+    valid = [c[0] for c in jobsAppliedTo._meta.get_field('status').choices]
+
+    if status_update not in valid:
+        return HttpResponseBadRequest()
+    recruiter_jobs = recruiter_job(request)
+    application = jobsAppliedTo.objects.filter(id=application_id, jobIDFK__in=recruiter_jobs).first()
+
+    if not application:
+        raise Http404
+    application.status = status_update
+    application.save()
+    return JsonResponse({'ok': True, 'status': status_update})
