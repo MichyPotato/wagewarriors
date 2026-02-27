@@ -12,6 +12,8 @@ class job(models.Model):
     hasVisaSponsorship = models.BooleanField(default=False)
     company = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
+    # Lat = models.FloatField(default=0.0, blank=True)
+    # Long = models.FloatField(default=0.0, blank=True)
 
     def __str__(self):
         return f"{self.title}: {self.id}"   

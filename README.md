@@ -29,7 +29,8 @@ go back to your Github fork and click contribute --> pull request
 # Important notes
 ### PythonAnywhere
 - Get a custom key from Github <br/>
-- Do `pip install django-import-export` for the custom apps <br/>
+- Do `pip install django-import-export` For export to CSV <br/>
+- Do `pip install geopy` for calculating distance of points <br/>
 <hr>
 
 

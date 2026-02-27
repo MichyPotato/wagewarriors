@@ -159,7 +159,7 @@ def recruiter_job(request):
     company = getattr(request.user.recruiter_profile, 'company_name', '') or ''
 
     if not company:
-        reuturn job.objects.none()
+        return job.objects.none()
         
     return job.objects.filter(company=company)
 
