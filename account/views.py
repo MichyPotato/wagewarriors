@@ -3,9 +3,14 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .forms import SeekerSignupForm, RecruiterSignupForm, CustomErrorList
-from .models import jobSeeker, recruiter, User
+from .models import jobSeeker, recruiter, User, jobsAppliedTo
 from .forms import UserEditForm, JobSeekerProfileForm, RecruiterProfileForm
 from django.contrib.auth import logout
+from jobs.models import job
+from django.http import JsonResponse, HttpResponseBadRequest, Http404
+from django.views.decorators.http import require_POST
+from django.core.exceptions import PermissionDenied 
+
 
 # Create your views here.
 #Landing page to let users sign up as a job seeker or recruiter
@@ -147,3 +152,61 @@ def applications(request, username):
         'applications': applications,
     }
     return render(request, 'account/applications.html', {'template_data': template_data, 'user': user})
+
+def recruiter_job(request):
+    if not request.user.is_authenticated or not getattr(request.user, 'is_recruiter', False):
+        return job.objects.none()
+    company = getattr(request.user.recruiter_profile, 'company_name', '') or ''
+
+    if not company:
+        reuturn job.objects.none()
+        
+    return job.objects.filter(company=company)
+
+@login_required
+def kanban(request, job_id=None):
+    if not getattr(request.user, 'is_recruiter', False):
+        return redirect('jobs.index')
+    recruiter_jobs = recruiter_job(request)
+    if job_id is not None:
+        job_instance = get_object_or_404(job, id=job_id)
+        if job_instance not in recruiter_job:
+            return redirect('account.kanban')
+        applications = jobsAppliedTo.objects.filter(JobIDFK=job_instance).select_related('jobSeekerIDFK', 'jobSeekerIDFK__user').order_by('status', 'jobSeekerIDFK__user__username')
+        status = [c[0] for c in jobsAppliedTo._meta.get_field('status').choices]
+    
+        template_data = {}
+        template_data['title'] = f'Pipeline: {job_instance.title}'
+        template_data['job'] = job_instance
+        template_data['applications'] = applications
+        template_data['status'] = status
+
+        return render(request, 'account/kanban.html', {'template_data': template_data})
+    template_data = {}
+    template_data['title'] = 'Applicant Pipeline'
+    template_data['jobs'] = recruiter_job
+
+    return render(request, 'account/kanban_job.html', {'template_data': template_data})
+
+@login_required
+@require_POST
+def kanban_update(request):
+    if not getattr(request.user, 'is_recruiter', False):
+        raise PermissionDenied
+    application_id = request.POST.get('application_id')
+    status_update = request.POST.get('status')
+    
+    if not application_id or not status_update:
+        return HttpResponseBadRequest()
+    valid = [c[0] for c in jobsAppliedTo._meta.get_field('status').choices]
+
+    if status_update not in valid:
+        return HttpResponseBadRequest()
+    recruiter_jobs = recruiter_job(request)
+    application = jobsAppliedTo.objects.filter(id=application_id, jobIDFK__in=recruiter_jobs).first()
+
+    if not application:
+        raise Http404
+    application.status = status_update
+    application.save()
+    return JsonResponse({'ok': True, 'status': status_update})

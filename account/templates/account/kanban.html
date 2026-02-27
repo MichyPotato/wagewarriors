@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <div class="container-fluid py-4">
+        <header class="d-flex justify-content-betweeen alight-itens-center mb-3 flex-wrap gap-2">
+            <div>
+                <a href="{% url 'account.kanban' %}" class="btn btn-outline-secondary btn-sm mb-2">&larr; All Jobs</a>
+                <h2 class="mb-0">{{ template_data.job.title }}</h2>
+                <p class="text-muted small mb-0"> {{ template_data.job.company }}</p>
+            </div>
+        </header>
+        <div class="pipeline-board d-flex gap-3 overflow-auto pb-4" style="min-height: 70vh;" data-update-status-url="{% url 'account.kanban_job' %}">
+            {% for status in template_data.status %}
+                <div class="pipeline-column flex-shrink-0 rounded-3 boarder bg-light p-3" data-status="{{ status }}" style="min-width: 280px; max-width: 320px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0 text-uppercase fw-bold">{{ status }}</h6>
+                        <span class="badge bg-secondary applicant-count" id="count-{{ status }}">0</span>
+                    </div>
+                    <div class="pipeline-cards droppable" data-status="{{ status }}">
+                        {% for app in template_data.application %}
+                            {% if app.status == status %}
+                                <div class="card pipeline-card mb-2 shadow-sm applicant-card" draggable="true" data-applicant-id="{{ app.id }}" data-status="{{ status }}">
+                                    <div class="card-body py-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <strong class="d-block">
+                                                    {{ app.jobSeekerIDFK.user.get_full_name|default:app.jobSeekerIDFK.user.username }}
+                                                </strong>
+                                                <small class="text-muted">@{{ app.jobSeekerIDFK.user.username }}</small>
+                                            </div>
+                                        </div>
+                                        {% if app.jobSeekerIDFK.headline %}
+                                            <p class="small text-dark mt-2 mb-0">
+                                                {{ app.jobSeekerIDFK.headline|truncatewords:12 }}
+                                            </p>
+                                        {% endif %}
+                                        {% if app.note %}
+                                            <p class="cmall text-muted mt-1 mb-0">
+                                                <em>{{ app.note|truncatewords:8 }}</em>
+                                            </p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                    {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+<style>
+    .kanban-column { min-height: 400px; transition: background-color 0.2s ease; }
+    .drag-over { background-color: rgba(13, 110, 253, 0.1) !important; border: 2px dashed #0d6efd !important; }
+    .draggable-card { cursor: grab; transition: transform 0.1s; }
+    .draggable-card:active { cursor: grabbing; transform: scale(1.03); }
+</style>
+
+<script>
+function allowDrop(ev) {
+    ev.preventDefault();
+    ev.currentTarget.classList.add('drag-over');
+}
+
+// Remove highlight if card is dragged away
+document.querySelectorAll('.kanban-column').forEach(col => {
+    col.addEventListener('dragleave', (e) => e.currentTarget.classList.remove('drag-over'));
+});
+
+function drag(ev) {
+    ev.dataTransfer.setData("application_id", ev.target.getAttribute('data-app-id'));
+    ev.dataTransfer.setData("element_id", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    const column = ev.currentTarget;
+    column.classList.remove('drag-over');
+    
+    const appId = ev.dataTransfer.getData("application_id");
+    const elementId = ev.dataTransfer.getData("element_id");
+    const newStatus = column.id;
+    const cardElement = document.getElementById(elementId);
+
+    // Hit your kanban_update view
+    fetch("{% url 'account.kanban_update' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: `application_id=${appId}&status=${newStatus}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.ok) {
+            column.appendChild(cardElement);
+        } else {
+            alert("Error updating status. Please try again.");
+        }
+    })
+    .catch(err => console.error("Update failed:", err));
+}
+</script>
+{% endblock content %}

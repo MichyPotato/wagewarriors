@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="container py-4">
+        <div class="row">
+            <div class="col">
+                <h2 class="mb-3">{{ template_data.title }}</h2>
+                <p class="text-muted">Select a job to view and manage applicants in a pipeline.</p>
+                <hr>
+                {% for j in template_data.jobs %}
+                    <div class="card mb-3 shadow-sm">
+                        <div claa="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title mb-1">{{ j.title }}</h5>
+                                <p class="card-text text-muted small mb-0">{{ j.company }} · {{j.location|default:"-" }}</p>
+                            </div>
+                            <a href="{% url 'account.kanban_job' j.id %}" class="btn btn-primary"> View pipeline</a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info">
+                        You do not have any job postings yet. Post a job at <a href="{% url 'jobs.index' %}">Your Jobs</a> to see applicants here.
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
