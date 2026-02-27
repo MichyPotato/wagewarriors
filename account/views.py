@@ -159,7 +159,7 @@ def recruiter_job(request):
     company = getattr(request.user.recruiter_profile, 'company_name', '') or ''
 
     if not company:
-        reuturn job.objects.none()
+        return job.objects.none()
         
     return job.objects.filter(company=company)
 
@@ -170,9 +170,9 @@ def kanban(request, job_id=None):
     recruiter_jobs = recruiter_job(request)
     if job_id is not None:
         job_instance = get_object_or_404(job, id=job_id)
-        if job_instance not in recruiter_job:
+        if job_instance not in recruiter_jobs:
             return redirect('account.kanban')
-        applications = jobsAppliedTo.objects.filter(JobIDFK=job_instance).select_related('jobSeekerIDFK', 'jobSeekerIDFK__user').order_by('status', 'jobSeekerIDFK__user__username')
+        applications = jobsAppliedTo.objects.filter(jobIDFK=job_instance).select_related('jobSeekerIDFK', 'jobSeekerIDFK__user').order_by('status', 'jobSeekerIDFK__user__username')
         status = [c[0] for c in jobsAppliedTo._meta.get_field('status').choices]
     
         template_data = {}
@@ -184,7 +184,7 @@ def kanban(request, job_id=None):
         return render(request, 'account/kanban.html', {'template_data': template_data})
     template_data = {}
     template_data['title'] = 'Applicant Pipeline'
-    template_data['jobs'] = recruiter_job
+    template_data['jobs'] = recruiter_jobs
 
     return render(request, 'account/kanban_job.html', {'template_data': template_data})
 
