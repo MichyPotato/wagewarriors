@@ -157,6 +157,10 @@ def recruiter_job(request):
     if not request.user.is_authenticated or not getattr(request.user, 'is_recruiter', False):
         return job.objects.none()
     company = getattr(request.user.recruiter_profile, 'company_name', '') or ''
+
+    if not company:
+        reuturn job.objects.none()
+        
     return job.objects.filter(company=company)
 
 @login_required
@@ -166,7 +170,7 @@ def kanban(request, job_id=None):
     recruiter_jobs = recruiter_job(request)
     if job_id is not None:
         job_instance = get_object_or_404(job, id=job_id)
-        if job_instance not in recruiter_job
+        if job_instance not in recruiter_job:
             return redirect('account.kanban')
         applications = jobsAppliedTo.objects.filter(JobIDFK=job_instance).select_related('jobSeekerIDFK', 'jobSeekerIDFK__user').order_by('status', 'jobSeekerIDFK__user__username')
         status = [c[0] for c in jobsAppliedTo._meta.get_field('status').choices]
@@ -182,7 +186,7 @@ def kanban(request, job_id=None):
     template_data['title'] = 'Applicant Pipeline'
     template_data['jobs'] = recruiter_job
 
-    return render(request, 'account/kanban_job.html' {'template_data': template_data})
+    return render(request, 'account/kanban_job.html', {'template_data': template_data})
 
 @login_required
 @require_POST
