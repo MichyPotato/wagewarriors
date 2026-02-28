@@ -20,8 +20,7 @@
                     </div>
                     <div class="pipeline-cards droppable" data-status="{{ status }}">
                         {% for app in template_data.applications %}
-                            {% if app.status == status %}
-                                <div class="card mb-2 shadow-sm border-0">
+                            {% if app.status == status %}<div class="card mb-2 shadow-sm border-0">
                                     <div class="card-body p-3">
                                         <h6 class="mb-2 fw-bold">{{ app.job.SeekerIDFK.user.get_full_name|default:app.jobSeekerIDFK.user.username }}</h6>
                                         <form action="{% url 'account.kanban_update' app.id %}" method="POST">
