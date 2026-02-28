@@ -10,7 +10,7 @@ class jobSeeker(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='job_seeker_profile')
     currentLocation = models.CharField(max_length=100, blank=True)
     headline = models.CharField(max_length=255, blank=True)
-    skills = models.TextField(blank=True)
+    skills= models.JSONField(default=list)
     education = models.TextField(blank=True)
     work_experience = models.TextField(blank=True)
     additional_links = models.TextField(blank=True)

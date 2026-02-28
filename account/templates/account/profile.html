@@ -95,7 +95,11 @@
                         </div>
                         <div class="card-body">
                             {% if user.job_seeker_profile.skills %}
-                                <p>{{ user.job_seeker_profile.skills }}</p>
+                                <ul class="list-group mb-2">
+                                  {% for skill in user.job_seeker_profile.skills %}
+                                    <li class="list-group-item">{{ skill }}</li>
+                                  {% endfor %}
+                                </ul>
                             {% else %}
                                 <p class="text-muted fst-italic">No skills listed yet.</p>
                             {% endif %}

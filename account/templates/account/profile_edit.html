@@ -28,7 +28,7 @@
                 {% if field.name == 'isPrivate' %}
                   <div class="form-check mb-3">
                     {{ field }}
-                    {{ field.label_tag }}
+                    Account is Private
                     {% if field.help_text %}
                       <div class="form-text text-muted">{{ field.help_text }}</div>
                     {% endif %}
@@ -36,9 +36,33 @@
                       <div class="text-danger small">{{ field.errors }}</div>
                     {% endif %}
                   </div>
+                {% elif field.name == 'skills' %}
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Skills</label>
+
+                    <input type="hidden" name="skills" id="skills-hidden" value="{{ skills_prepopulated }}">
+
+                    <div id="skills-container" class="d-flex flex-wrap gap-2 p-2 border rounded bg-light mb-2">
+                      {% for skill in profile_instance.skills %}
+                      <span class="badge bg-secondary d-flex align-items-center p-2 skill-tag">
+                        <span class="skill-text" contenteditable="true">{{ skill }}</span>
+                        <button type="button" class="btn-close btn-close-white ms-2 remove-skill" style="font-size: 0.5rem;"></button>
+                      </span>
+                      {% endfor %}
+                    </div>
+
+                    <div class="input-group">
+                      <input type="text" id="skill-input" class="form-control" placeholder="Add a skill and press Enter or comma...">
+                      <button class="btn btn-outline-secondary" type="button" id="add-skill-btn">Add</button>
+                    </div>
+                  </div>
                 {% else %}
                   <div class="mb-3">
-                    {{ field.label_tag }}
+                    {% if field.name == 'currentLocation' %}
+                      Current Location
+                    {% else %}
+                      {{ field.label_tag }}
+                    {% endif %}
                     {{ field }}
                     {% if field.help_text %}
                       <small class="form-text text-muted">{{ field.help_text }}</small>
@@ -50,10 +74,9 @@
                 {% endif %}
               {% endfor %}
             {% endif %}
-
             <div class="d-flex justify-content-end">
               <a href="{% url 'account.profile' username=user_obj.username %}" class="btn btn-secondary me-2">Cancel</a>
-              <button type="submit" class="btn btn-primary">Save changes</button>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
             </div>
           </form>
         </div>
@@ -61,4 +84,57 @@
     </div>
   </div>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('skills-container')
+    const skillInput = document.getElementById('skill-input');
+    const hiddenInput = document.getElementById('skills-hidden');
+    const addBtn = document.getElementById('add-skill-btn');
+
+    function updateHiddenInput() {
+      const skills = [];
+      container.querySelectorAll('.skill-text').forEach(skill => {
+        if (skill.innerText.trim()) skills.push(skill.innerText.trim());
+      });
+      hiddenInput.value = skills.join(',');
+    }
+
+    function createSkillTag(skill) {
+      const skillTag = document.createElement('span');
+      skillTag.className = 'badge bg-secondary d-flex align-items-center p-2 skill-tag'
+      skillTag.innerHTML = `
+        <span class="skill-text" contenteditable="true">${skill}</span>
+        <button type="button" class="btn-close btn-close-white ms-2 remove-skill" style="font-size: 0.5rem;"></button>
+      `;
+      container.appendChild(skillTag);
+      updateHiddenInput();
+    }
+
+    skillInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault()
+        const skill = skillInput.value.replace(',', '').trim();
+        if (skill) { createSkillTag(skill); skillInput.value = ''; }
+      }
+    });
+
+    addBtn.addEventListener('click', () => {
+      const skill = skillInput.value.trim();
+      if (skill) { createSkillTag(skill); skillInput.value = ''; }
+    })
+
+    container.addEventListener('click', function(e) {
+      if (e.target.classList.contains('remove-skill')) {
+        e.target.parentElement.remove();
+        updateHiddenInput();
+      }
+    });
+
+    container.addEventListener('input', function(e) {
+      if (e.target.classList.contains('skill-text')) {
+        updateHiddenInput();
+      }
+    })
+  });
+</script>
 {% endblock content %}

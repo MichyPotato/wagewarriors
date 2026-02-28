@@ -54,6 +54,7 @@ class UserEditForm(forms.ModelForm):
 
 
 class JobSeekerProfileForm(forms.ModelForm):
+    skills = forms.CharField(required=False)
     class Meta:
         model = jobSeeker
         fields = ['currentLocation', 'headline', 'skills', 'education', 'work_experience', 'additional_links', 'isPrivate']
