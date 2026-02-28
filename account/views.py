@@ -171,9 +171,9 @@ def kanban(request, job_id=None):
     recruiter_jobs = recruiter_job(request)
     if job_id is not None:
         job_instance = get_object_or_404(job, id=job_id)
-        if job_instance not in recruiter_job:
+        if job_instance not in recruiter_jobs:
             return redirect('account.kanban')
-        applications = jobsAppliedTo.objects.filter(JobIDFK=job_instance).select_related('jobSeekerIDFK', 'jobSeekerIDFK__user').order_by('status', 'jobSeekerIDFK__user__username')
+        applications = jobsAppliedTo.objects.filter(jobIDFK=job_instance).select_related('jobSeekerIDFK', 'jobSeekerIDFK__user').order_by('status', 'jobSeekerIDFK__user__username')
         status = [c[0] for c in jobsAppliedTo._meta.get_field('status').choices]
     
         template_data = {}
@@ -185,29 +185,27 @@ def kanban(request, job_id=None):
         return render(request, 'account/kanban.html', {'template_data': template_data})
     template_data = {}
     template_data['title'] = 'Applicant Pipeline'
-    template_data['jobs'] = recruiter_job
+    template_data['jobs'] = recruiter_jobs
 
     return render(request, 'account/kanban_job.html', {'template_data': template_data})
 
 @login_required
 @require_POST
-def kanban_update(request):
-    if not getattr(request.user, 'is_recruiter', False):
+def kanban_update(request, application_id):
+     if not getattr(request.user, 'is_recruiter', False):
         raise PermissionDenied
-    application_id = request.POST.get('application_id')
-    status_update = request.POST.get('status')
-    
-    if not application_id or not status_update:
-        return HttpResponseBadRequest()
-    valid = [c[0] for c in jobsAppliedTo._meta.get_field('status').choices]
-
-    if status_update not in valid:
-        return HttpResponseBadRequest()
+    application = get_object_or_404(jobsAppliedTo, id=application_id)
     recruiter_jobs = recruiter_job(request)
-    application = jobsAppliedTo.objects.filter(id=application_id, jobIDFK__in=recruiter_jobs).first()
+    
+    if application.jobIDFK not in recruiter_jobs:
+        raise PermissionDenied
+    
+    if request.method == 'POST':
+        status_update = request.POST.get('status')
+        valid = [c[0] for c in jobsAppliedTo._meta.get_field('status').choices]
 
-    if not application:
-        raise Http404
-    application.status = status_update
-    application.save()
-    return JsonResponse({'ok': True, 'status': status_update})
+        if status_update in valid:
+            application.status = status_update
+            application.save()
+
+    return redirect('account.kanban_job', job_id=application.jobIDFK.id)
