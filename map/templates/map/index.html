@@ -25,21 +25,21 @@
                                 <h3 class="card-title">Navigation</h3>
                                 <br/>
 
-                                <h5>Sort by Country, State, and City</h5>
+                                {% comment %} <h5>Sort by Country, State, and City</h5>
                                 <hr><br/>
                                 <div class="d-flex gap-2 mb-3 flex-wrap w-100">
                                     <button data-bs-toggle="dropdown" class="btn btn-success dropdown-toggle flex-fill">Country</button>
                                     <button data-bs-toggle="dropdown" class="btn btn-success dropdown-toggle flex-fill">State</button>
                                     <button data-bs-toggle="dropdown" class="btn btn-success dropdown-toggle flex-fill">City</button>
                                 </div>
-                                    <button class="btn btn-dark flex-fill">Submit</button>
+                                    <button class="btn btn-dark flex-fill">Submit</button> {% endcomment %}
                                     
                                 <hr>
-                                <h5 class="card-title">Sort by distance</h5><br/>
+                                <h5 class="card-title">Filter by Distance</h5><br/>
                                 <div class="d-flex justify-content-center gap-2 mb-3">
                                     <form>
                                         <div class="input-group">
-                                            <input type="number" class="form-control flex-fill text-start" placeholder="Distance in Kilometers" aria-label="Distance in Kilometers" aria-describedby="distanceHelp">
+                                            <input type="number" class="form-control flex-fill text-start" aria-label="Distance in Kilometers" aria-describedby="distanceHelp">
                                         </div>
 
                                         <label for="range4" class="form-label text-start"></label>
@@ -62,12 +62,11 @@
                                     </form>
                                 </div>
                                 
-                                
-                                
                                 <hr>
                                 <h5 class="card-title">My Location</h5><br/>
-                                <div class="d-flex justify-content-center">
+                                <div class="d-flex justify-content-center gap-2 mb-3">
                                     <button class="btn btn-dark">View My Location</button>
+                                    <button class="btn btn-warning">Edit location</button>
                                 </div>
                             </div>
                         </div>

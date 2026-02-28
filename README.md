@@ -33,7 +33,6 @@ go back to your Github fork and click contribute --> pull request
 - Do `pip install geopy` for calculating distance of points <br/>
 <hr>
 
-
 # Tasks
 - Send proper errors site wide. <br/>
 - Add custom colors to allow for green roman theme. <br/>
@@ -42,7 +41,7 @@ go back to your Github fork and click contribute --> pull request
 - Add message to profile/ job search to indicate that a user has to fill out information to apply to a job <br/>
 - Configure footer to have updated information <br/>
 - Configure the location field, so it is 3 fields (Country, State, City) <br/>
-- Add a panel to the left of the map for filters <br/>
+- <s>Add a panel to the left of the map for filters <br/></s>
 - debug viewing another users profile (can encounter an error in some instances) <br/>
 
 <hr>
