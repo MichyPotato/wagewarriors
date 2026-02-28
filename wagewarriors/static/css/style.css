@@ -1,4 +1,4 @@
-.bg-index{
+.bg-index {
     background: url("/static/img/banner.jpg") no-repeat fixed; background-size: 100% auto;
 }
 
@@ -13,7 +13,7 @@ background-color: #202020;
     color: #99EEDD;
     text-decoration: none;
 }
-.ms-footer-bottom span{
+.ms-footer-bottom span {
     font-size: 13px;
     line-height: 38px;
 }

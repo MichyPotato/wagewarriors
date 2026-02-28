@@ -17,48 +17,64 @@
                 {% comment %} Job seeker map {% endcomment %}
                 <div class="container mb-3">
                   <div class="row justify-content-center">
-                    {% comment %} Map {% endcomment %}
-                    <div class="col-md-7 d-flex flex-column align-items-center">
-                        <div id="map" style="height: 600px; width: 100%"></div>
-                        {{ cities|json_script:"cities_json" }}
-                    </div>
-
-                    {% comment %} Card {% endcomment %}
+                      
+                      {% comment %} Card {% endcomment %}
                     <div class="col-md-5 d-flex flex-column align-items-center">
                         <div class="card mb-3 w-100" style="max-width: 22rem;">
                             <div class="card-body">
                                 <h3 class="card-title">Navigation</h3>
                                 <br/>
 
-                                <h5>Sort by Country, State, and City</h5>
+                                {% comment %} <h5>Sort by Country, State, and City</h5>
                                 <hr><br/>
                                 <div class="d-flex gap-2 mb-3 flex-wrap w-100">
                                     <button data-bs-toggle="dropdown" class="btn btn-success dropdown-toggle flex-fill">Country</button>
                                     <button data-bs-toggle="dropdown" class="btn btn-success dropdown-toggle flex-fill">State</button>
                                     <button data-bs-toggle="dropdown" class="btn btn-success dropdown-toggle flex-fill">City</button>
                                 </div>
-                                    <button class="btn btn-dark flex-fill">Submit</button>
-
+                                    <button class="btn btn-dark flex-fill">Submit</button> {% endcomment %}
+                                    
                                 <hr>
-                                <h5 class="card-title">Sort by distance</h5><br/>
+                                <h5 class="card-title">Filter by Distance</h5><br/>
                                 <div class="d-flex justify-content-center gap-2 mb-3">
                                     <form>
                                         <div class="input-group">
-                                            <input type="number" class="form-control flex-fill" placeholder="Distance in miles">
+                                            <input type="number" class="form-control flex-fill text-start" aria-label="Distance in Kilometers" aria-describedby="distanceHelp">
                                         </div>
-                                        <button class="btn btn-dark flex-fill mt-2">Submit</button>
+
+                                        <label for="range4" class="form-label text-start"></label>
+                                        <input type="range" class="form-range text-start" min="0" max="100" value="50" id="range4">
+                                        <output for="range4" id="rangeValue" aria-hidden="true"></output>
+
+                                        {% comment %} Script to display for slider {% endcomment %}
+                                        <script>
+                                            const rangeInput = document.getElementById('range4');
+                                            const rangeOutput = document.getElementById('rangeValue');
+
+                                            // Set initial value
+                                            rangeOutput.textContent = rangeInput.value;
+
+                                            rangeInput.addEventListener('input', function() {
+                                                rangeOutput.textContent = this.value;
+                                            });
+                                        </script>
+                                        {% comment %} <button class="btn btn-dark flex-fill mt-2">Submit</button> {% endcomment %}
                                     </form>
                                 </div>
-
-
-
+                                
                                 <hr>
                                 <h5 class="card-title">My Location</h5><br/>
-                                <div class="d-flex justify-content-center">
+                                <div class="d-flex justify-content-center gap-2 mb-3">
                                     <button class="btn btn-dark">View My Location</button>
+                                    <button class="btn btn-warning">Edit location</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    {% comment %} Map {% endcomment %}
+                    <div class="col-md-7 d-flex flex-column align-items-center">
+                        <div id="map" style="height: 600px; width: 100%"></div>
+                        {{ cities|json_script:"cities_json" }}
                     </div>
                   </div>
                 </div>
@@ -66,12 +82,7 @@
                 {% comment %} Admin/Recruiter map {% endcomment %}
                 <div class="container mb-3">
                   <div class="row justify-content-center">
-                    {% comment %} Map {% endcomment %}
-                    <div class="col-md-7 d-flex flex-column align-items-center">
-                        <div id="map" style="height: 600px; width: 100%"></div>
-                        {{ cities|json_script:"cities_json" }}
-                    </div>
-
+                      
                     {% comment %} Card {% endcomment %}
                     <div class="col-md-5 d-flex flex-column align-items-center">
                         <div class="card mb-3 w-100" style="max-width: 22rem;">
@@ -79,22 +90,50 @@
                                 <h3 class="card-title">Navigation</h3>
                                 <hr><br/>
 
-                                <h5>Sort by Country, State, and City</h5>
+                                <h5>Center map</h5>
                                 <div class="d-flex gap-2 mb-3 flex-wrap w-100">
                                     <button data-bs-toggle="dropdown" class="btn btn-info dropdown-toggle flex-fill">Country</button>
                                     <button data-bs-toggle="dropdown" class="btn btn-info dropdown-toggle flex-fill">State</button>
                                     <button data-bs-toggle="dropdown" class="btn btn-info dropdown-toggle flex-fill">City</button>
                                 </div>
 
-                                <h5 class="card-title">My Office</h5>
+                                <h5 class="card-title">My job postings</h5>
                                 <hr><br/>
-                                <div class="d-flex justify-content-center">
-                                    <button class="btn btn-dark">View My Office</button>
+                                <div class="d-flex justify-content-center gap-2 mb-3 flex-wrap w-100">
+                                    <button class="btn btn-dark">Job 1</button>
+                                    <button class="btn btn-dark">Job 2</button>
+                                    <button class="btn btn-dark">Job 3</button>
+                                    <button class="btn btn-dark">Job 4</button>
+                                    <button class="btn btn-dark">Job 5</button>
+                                    <button class="btn btn-dark">Job 6</button>
+                                    <button class="btn btn-dark">Job 7</button>
+                                </div>
+                                                    
+                                <h5 class="card-title">My Applicants</h5>
+                                <hr><br/>
+                                <div class="d-flex justify-content-center gap-2 mb-3 flex-wrap w-100">
+                                    {% comment %} For loop through applicants (If the recruiter has any that are not private) {% endcomment %}
+                                    <button class="btn btn-dark">John</button>
+                                    <button class="btn btn-dark">Jacob</button>
+                                    <button class="btn btn-dark">Jingle</button>
+                                    <button class="btn btn-dark">Heimerschmit</button>
+                                </div>
+
+                                <h5 class="card-title">My location</h5>
+                                <hr><br/>
+                                <div class="d-flex justify-content-center gap-2 mb-3 flex-wrap w-100">
+                                    <button class="btn btn-success">My Location</button>
+                                    <button class="btn btn-warning">Edit Location</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                  </div>
+                    {% comment %} Map {% endcomment %}
+                    <div class="col-md-7 d-flex flex-column align-items-center">
+                        <div id="map" style="height: 600px; width: 100%"></div>
+                        {{ cities|json_script:"cities_json" }}
+                    </div>
+                </div>
                 </div>
                 {% endif %}
 
@@ -113,15 +152,16 @@
                     let cities = JSON.parse(document.getElementById('cities_json').textContent);
                     
                     //for 300 cities, add a marker to the map
-                    {% comment %} cities.forEach(city => {
+                    cities.forEach(city => {
                         let marker = L.marker([city.latitude, city.longitude]).addTo(map);
                         marker.bindPopup(`<b>${city.city}, ${city.state}, ${city.country}</b><br>(${city.latitude}, ${city.longitude})`);
-                        }); {% endcomment %}
+                        //let polyline = L.polyline([[33.78, -84.4], [city.latitude, city.longitude]], {color: 'red'}).addTo(map);
+                        }); 
                         
-                        map.on('click', function(e) {
-                            var lat = e.latlng.lat;
-                            var lng = e.latlng.lng;
-                            var marker = L.marker([lat, lng]).addTo(map);
+                    map.on('click', function(event) {
+                        var lat = event.latlng.lat;
+                        var lng = event.latlng.lng;
+                        var marker = L.marker([lat, lng]).addTo(map);
                     });
                 </script>
             </div>

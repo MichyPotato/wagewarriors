@@ -15,6 +15,8 @@ class jobSeeker(models.Model):
     work_experience = models.TextField(blank=True)
     additional_links = models.TextField(blank=True)
     isPrivate = models.BooleanField(default=False)
+    # curLat = models.FloatField(default=0.0, blank=True)
+    # curLong = models.FloatField(default=0.0, blank=True)
 
     def __str__(self):
         return self.user.username
