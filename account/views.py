@@ -88,7 +88,11 @@ def edit_profile(request, username):
         if forms_valid:
             user_form.save()
             if profile_form:
-                profile_form.save()
+                if user_obj.is_job_seeker:
+                    skills_raw = request.POST.get('skills', '')
+                    profile_instance.skills = [s.strip() for s in skills_raw.split(',') if s.strip()]
+                    profile_instance.save()
+                    profile_form.save()
             return redirect('account.profile', username=user_obj.username)
     else:
         user_form = UserEditForm(instance=user_obj)
@@ -103,6 +107,8 @@ def edit_profile(request, username):
         'user_form': user_form,
         'profile_form': profile_form,
         'user_obj': user_obj,
+        'profile_instance': profile_instance,
+        'skills_prepopulated': ', '.join(profile_instance.skills or []) if user_obj.is_job_seeker else '',
         'template_data': {'title': 'Edit Profile'},
     })
 
