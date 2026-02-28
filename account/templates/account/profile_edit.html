@@ -28,7 +28,7 @@
                 {% if field.name == 'isPrivate' %}
                   <div class="form-check mb-3">
                     {{ field }}
-                    {{ field.label_tag }}
+                    Account is Private
                     {% if field.help_text %}
                       <div class="form-text text-muted">{{ field.help_text }}</div>
                     {% endif %}
@@ -38,7 +38,11 @@
                   </div>
                 {% else %}
                   <div class="mb-3">
-                    {{ field.label_tag }}
+                    {% if field.name == 'currentLocation' %}
+                      Current Location
+                    {% else %}
+                      {{ field.label_tag }}
+                    {% endif %}
                     {{ field }}
                     {% if field.help_text %}
                       <small class="form-text text-muted">{{ field.help_text }}</small>
