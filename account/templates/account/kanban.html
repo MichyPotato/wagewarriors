@@ -79,13 +79,16 @@ function drop(ev) {
     const newStatus = column.id;
     const cardElement = document.getElementById(elementId);
 
-    fetch("{% url 'account.kanban_update' %}", {
+
+    const baseUrl = "{% url 'account.kanban_update' 0 %}".replace('0', appId);
+
+    fetch(baseURL, {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             "X-CSRFToken": "{{ csrf_token }}"
         },
-        body: `application_id=${appId}&status=${newStatus}`
+        body: `status=${newStatus}`
     })
     .then(response => response.json())
     .then(data => {

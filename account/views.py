@@ -192,7 +192,7 @@ def kanban(request, job_id=None):
 @login_required
 @require_POST
 def kanban_update(request, application_id):
-     if not getattr(request.user, 'is_recruiter', False):
+    if not getattr(request.user, 'is_recruiter', False):
         raise PermissionDenied
     application = get_object_or_404(jobsAppliedTo, id=application_id)
     recruiter_jobs = recruiter_job(request)
