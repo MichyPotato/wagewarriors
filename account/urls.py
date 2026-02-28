@@ -3,13 +3,16 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='account.index'),
+
     path('signup/seeker', views.seeker_signup, name='account.seeker_signup'),
     path('signup/recruiter', views.recruiter_signup, name='account.recruiter_signup'),
     path('profile/<str:username>/', views.profile, name='account.profile'),
+    path('login/', views.login_view, name='account.login'),
+
     path('profile/<str:username>/edit', views.edit_profile, name='account.edit_profile'),
     path('applications/<str:username>/', views.applications, name='account.applications'),
-    path('login/', views.login_view, name='account.login'),
     path('logout/', views.logout_view, name='account.logout'),
+
     path('kanban/', views.kanban, name='account.kanban'),
     path('kanban/<int:job_id>/', views.kanban, name='account.kanban_job'),
     path('kanban/update/<int:application_id>/', views.kanban_update, name='account.kanban_update'),

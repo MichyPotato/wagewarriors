@@ -2,9 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .forms import SeekerSignupForm, RecruiterSignupForm, CustomErrorList
+from .forms import SeekerSignupForm, RecruiterSignupForm, CustomErrorList, RecruiterProfileForm, UserEditForm, JobSeekerProfileForm
 from .models import jobSeeker, recruiter, User, jobsAppliedTo
-from .forms import UserEditForm, JobSeekerProfileForm, RecruiterProfileForm
 from django.contrib.auth import logout
 from jobs.models import job
 from django.http import JsonResponse, HttpResponseBadRequest, Http404
@@ -21,6 +20,7 @@ def index(request):
 
 # Login view
 def login_view(request):
+    template_data = {}
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
 
@@ -35,11 +35,12 @@ def login_view(request):
             else:
                 return redirect('home.index')
         else:
-            pass
+            form.error_class = CustomErrorList
+            template_data['error'] = "Invalid username or password. Please try again."
     else:
         form = AuthenticationForm()
-    
-    return render(request, 'account/login.html', {'form': form})
+
+    return render(request, 'account/login.html', {'form': form, 'template_data': template_data})
 
 
 # Loads user's profile
@@ -113,7 +114,7 @@ def logout_view(request):
 
 def seeker_signup(request):
     if request.method == 'POST':
-        form = SeekerSignupForm(request.POST)
+        form = SeekerSignupForm(request.POST, error_class=CustomErrorList)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_job_seeker = True
@@ -121,12 +122,12 @@ def seeker_signup(request):
             jobSeeker.objects.create(user=user)
             return redirect('account.login')
     else:
-        form = SeekerSignupForm()
+        form = SeekerSignupForm(error_class=CustomErrorList)
     return render(request, 'account/seeker_signup.html', {'form': form})
     
 def recruiter_signup(request):
     if request.method == 'POST':
-        form = RecruiterSignupForm(request.POST)
+        form = RecruiterSignupForm(request.POST, error_class=CustomErrorList)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_recruiter = True
@@ -136,7 +137,7 @@ def recruiter_signup(request):
             recruiter_profile.save()
             return redirect('account.login')
     else:
-        form = RecruiterSignupForm()
+        form = RecruiterSignupForm(error_class=CustomErrorList)
     return render(request, 'account/recruiter_signup.html', {'form': form})
 
 def applications(request, username):

@@ -44,6 +44,7 @@
             <a class="nav-link" href="{% url 'applicants.index' %}">Applicants</a>
             <a class="nav-link" href="{% url 'account.kanban' %}">Pipeline</a>
             <div class="vr bg-white mx-2 d-none d-lg-block"></div>
+            <a class="nav-link" href="{% url 'account.kanban' %}">Kaban</a>
             <a class="nav-link" href="{% url 'chat.index' %}">Messages</a>
             <a class="nav-link" href="{% url 'account.logout' %}">Logout</a>
             <a class="nav-link" href="{% url 'account.profile' user.username %}">{{ user.username }}</a>
@@ -82,14 +83,16 @@
           <div class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-4">
             <b>Wage warriors</b>
             <hr />
-            <p>Welcome to Wage Warriors, your premier online destination for a Instant 
-                jobs for CS majors like you! Dive into the world of employment from the comfort of your own home with our user-friendly 
-                and immersive online hiring service.</p>
+            <p>The job market is a battlefield where anything can happen at any moment. 
+              Wage Warriors makes sure you're outfitted with the proper skills, and experience to get the job you deserve.
+            </p>
           </div>
           <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-4">
             <b>LINKS</b>
-            <hr />
-            <p><a class="nav-link" href="{% url 'home.index' %}">About</a></p>
+            <hr/>
+            <p><a class="nav-link" href="{% url 'home.index' %}">Home</a></p>
+            <p><a class="nav-link" href="{% url 'map.index' %}">Map</a></p>
+            <p><a class="nav-link" href="{% url 'jobs.index' %}">Job Search</a></p>
           </div>
         </div>
       </div>
