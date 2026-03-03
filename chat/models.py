@@ -4,6 +4,9 @@ from django.db import models
 class messages(models.Model):
     recruiterIDFK = models.ForeignKey('account.recruiter', on_delete=models.CASCADE)
     jobSeekerIDFK = models.ForeignKey('account.jobSeeker', on_delete=models.CASCADE)
+    sender = models.ForeignKey('account.User', on_delete=models.CASCADE, null=True, blank=True)
+    read_by_recruiter = models.BooleanField(default=False)
+    read_by_jobseeker = models.BooleanField(default=False)
     message = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 

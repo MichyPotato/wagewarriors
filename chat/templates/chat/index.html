@@ -2,13 +2,107 @@
 {% block content %}
 {% load static %}
 <div class="p-3">
-    <div class="conatiner">
+    <div class="container">
         <div class="row mt-3">
-            <div class="col mx-auto mb-3">
-                <h2>Messages Page</h2>
-                <hr>
+            <div class="col-md-8 mx-auto mb-3">
+                {% if template_data.is_chat_room %}
+                    <h2>Messages with {{ template_data.other_user.first_name }} {{ template_data.other_user.last_name }}</h2>
+                    <hr>
+                    
+                    <!-- Chat Messages Container -->
+                    <div class="card mb-3">
+                        <div class="card-body" style="height: 500px; overflow-y: auto;" id="chat-messages">
+                            {% for msg in template_data.conversation %}
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" 
+                                             style="width: 30px; height: 30px; font-size: 70%; flex-shrink: 0;">
+                                            {{ msg.sender.first_name|first|upper }}{{ msg.sender.last_name|first|upper }}
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">
+                                                {% if msg.sender_id == template_data.current_user_id %}
+                                                    you
+                                                {% else %}
+                                                    {{ msg.sender.username }}
+                                                {% endif %}
+                                                <small class="text-muted ms-2">{{ msg.timestamp|date:"M d, Y g:i A" }}</small>
+                                            </div>
+                                            <div class="mt-1 d-flex justify-content-between align-items-center">
+                                                <span>{{ msg.message }}</span>
+                                                {% if msg.sender_id == template_data.current_user_id and template_data.latest_seen_message_id == msg.id %}
+                                                    <small class="text-primary ms-2" title="Seen by other user">✓</small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="text-center text-muted mt-5">
+                                    <p>No messages yet. Start the conversation!</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Message Input Form -->
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="POST" class="d-flex gap-2">
+                                {% csrf_token %}
+                                <input type="text" name="message" class="form-control" placeholder="Type your message..." required autocomplete="off">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Send
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% elif template_data.is_index and template_data.show_select_conversation %}
+                    <h2>Messages</h2>
+                    <hr>
+                    
+                    {% if template_data.conversations %}
+                        <div class="alert alert-info mb-3">
+                            <p>Select a conversation to start messaging.</p>
+                        </div>
+                        
+                        <div class="list-group">
+                            {% for conv in template_data.conversations %}
+                                <a href="{{ conv.url }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 align-items-center">
+                                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center me-3" 
+                                             style="width: 40px; height: 40px; font-size: 80%; flex-shrink: 0;">
+                                            {{ conv.other_user.first_name|first|upper }}{{ conv.other_user.last_name|first|upper }}
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1 {% if conv.is_unread %}fw-bold{% endif %}">{{ conv.other_user.first_name }} {{ conv.other_user.last_name }}</h5>
+                                                <small class="text-muted">{{ conv.last_message.timestamp|date:"M d, g:i A" }}</small>
+                                            </div>
+                                            <p class="mb-1 text-muted {% if conv.is_unread %}fw-bold{% endif %}"><strong>{{ conv.preview_sender }}:</strong> {{ conv.preview_message }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <p>No conversations yet. Start messaging with recruiters or job seekers!</p>
+                        </div>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// Auto-scroll to bottom of chat messages
+window.addEventListener('DOMContentLoaded', (event) => {
+    const chatMessages = document.getElementById('chat-messages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+});
+</script>
 {% endblock content %}
