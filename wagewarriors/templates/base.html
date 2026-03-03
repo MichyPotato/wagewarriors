@@ -33,7 +33,12 @@
             <a class="nav-link" href="{% url 'jobs.index' %}">Job Search</a>
             <a class="nav-link" href="{% url 'account.applications' user.username %}">Applications</a>
             <div class="vr bg-white mx-2 d-none d-lg-block"></div>
-            <a class="nav-link" href="{% url 'chat.index' %}">Messages</a>
+            <a class="nav-link d-flex align-items-center gap-2" href="{% url 'chat.index' %}">
+              <span>Messages</span>
+              {% if unread_messages_count > 0 %}
+              <span class="badge rounded-pill bg-danger"><i class="fas fa-envelope me-1"></i>{{ unread_messages_count }}</span>
+              {% endif %}
+            </a>
             <a class="nav-link" href="{% url 'account.logout' %}">Logout</a>
             <a class="nav-link" href="{% url 'account.profile' user.username %}">{{ user.username }}</a>
 
@@ -44,7 +49,12 @@
             <a class="nav-link" href="{% url 'applicants.index' %}">Applicants</a>
             <a class="nav-link" href="{% url 'account.kanban' %}">Pipeline</a>
             <div class="vr bg-white mx-2 d-none d-lg-block"></div>
-            <a class="nav-link" href="{% url 'chat.index' %}">Messages</a>
+            <a class="nav-link d-flex align-items-center gap-2" href="{% url 'chat.index' %}">
+              <span>Messages</span>
+              {% if unread_messages_count > 0 %}
+              <span class="badge rounded-pill bg-danger"><i class="fas fa-envelope me-1"></i>{{ unread_messages_count }}</span>
+              {% endif %}
+            </a>
             <a class="nav-link" href="{% url 'account.logout' %}">Logout</a>
             <a class="nav-link" href="{% url 'account.profile' user.username %}">{{ user.username }}</a>
             {% elif user.is_authenticated %}
